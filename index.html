@@ -28,7 +28,35 @@
       text-align: center;
     }
 
-    .logo { font-size: 64px; margin-bottom: 16px; }
+    .logo { margin-bottom: 10px; }
+
+    /* Language switcher */
+    .lang-switch {
+      display: inline-flex;
+      gap: 8px;
+      padding: 6px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      margin: 6px 0 16px;
+    }
+
+    .lang-btn {
+      border: 0;
+      background: transparent;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #374151;
+      transition: all .2s ease;
+      line-height: 1;
+    }
+
+    .lang-btn.active {
+      background: #059669;
+      color: white;
+    }
 
     h1 {
       color: #1f2937;
@@ -157,27 +185,35 @@
 
 <body>
   <main class="container">
+
+    <!-- ✅ LOGO: je garde EXACTEMENT ton bloc -->
     <div class="logo">
-  <img src="/assets/logo.png" alt="Poker Link" style="width:72px;height:72px;object-fit:contain;">
-</div>
+      <img src="/assets/logo.png" alt="Poker Link" style="width:72px;height:72px;object-fit:contain;">
+    </div>
 
+    <!-- Language switch -->
+    <div class="lang-switch" aria-label="Choisir la langue">
+      <button class="lang-btn" data-lang="fr" type="button">FR</button>
+      <button class="lang-btn" data-lang="en" type="button">EN</button>
+      <button class="lang-btn" data-lang="es" type="button">ES</button>
+    </div>
 
-    <h1>Bienvenue sur Poker Link</h1>
-    <p class="subtitle">
+    <h1 id="t_title">Bienvenue sur Poker Link</h1>
+    <p class="subtitle" id="t_subtitle">
       Rejoins la communauté, télécharge l’app et utilise un code de parrainage pour débloquer des avantages.
     </p>
 
     <section class="card">
-      <h2>Pourquoi Poker Link ?</h2>
+      <h2 id="t_cardTitle">Pourquoi Poker Link ?</h2>
       <div class="list">
-        <div class="item"><span>🎁</span><span>Bonus de bienvenue avec un code de parrainage</span></div>
-        <div class="item"><span>🔗</span><span>Connexion rapide avec ton parrain / ta communauté</span></div>
-        <div class="item"><span>⭐</span><span>Accès aux contenus et échanges poker</span></div>
+        <div class="item"><span>🎁</span><span id="t_b1">Bonus de bienvenue avec un code de parrainage</span></div>
+        <div class="item"><span>🔗</span><span id="t_b2">Connexion rapide avec ton parrain / ta communauté</span></div>
+        <div class="item"><span>⭐</span><span id="t_b3">Accès aux contenus et échanges poker</span></div>
       </div>
     </section>
 
     <div class="actions">
-      <a class="btn primary" href="/join/">
+      <a class="btn primary" id="t_joinBtn" href="/join/">
         🚀 Rejoindre maintenant
       </a>
 
@@ -189,12 +225,127 @@
       </div>
     </div>
 
-    <p class="small">
+    <p class="small" id="t_tip">
       Astuce : tu peux aussi partager un lien direct comme <strong>/join/?ref=ABC123</strong>.
     </p>
   </main>
 
   <script>
+    // -------------------------
+    // i18n (FR/EN/ES)
+    // Priority: ?lang=  > saved choice > browser language
+    // -------------------------
+    const I18N = {
+      fr: {
+        title: "Bienvenue sur Poker Link",
+        subtitle: "Rejoins la communauté, télécharge l’app et utilise un code de parrainage pour débloquer des avantages.",
+        cardTitle: "Pourquoi Poker Link ?",
+        b1: "Bonus de bienvenue avec un code de parrainage",
+        b2: "Connexion rapide avec ton parrain / ta communauté",
+        b3: "Accès aux contenus et échanges poker",
+        joinBtn: "🚀 Rejoindre maintenant",
+        inputPh: "Tu as un code ? (ex: ABC123)",
+        goBtn: "🔑 Continuer avec mon code",
+        tip: 'Astuce : tu peux aussi partager un lien direct comme <strong>/join/?ref=ABC123</strong>.'
+      },
+      en: {
+        title: "Welcome to Poker Link",
+        subtitle: "Join the community, download the app, and use a referral code to unlock exclusive benefits.",
+        cardTitle: "Why Poker Link?",
+        b1: "Welcome bonus with a referral code",
+        b2: "Quick connection with your referrer / community",
+        b3: "Access to poker content and community chats",
+        joinBtn: "🚀 Join now",
+        inputPh: "Got a code? (e.g., ABC123)",
+        goBtn: "🔑 Continue with my code",
+        tip: 'Tip: you can also share a direct link like <strong>/join/?ref=ABC123</strong>.'
+      },
+      es: {
+        title: "Bienvenido a Poker Link",
+        subtitle: "Únete a la comunidad, descarga la app y usa un código de referidos para desbloquear ventajas.",
+        cardTitle: "¿Por qué Poker Link?",
+        b1: "Bono de bienvenida con un código de referidos",
+        b2: "Conexión rápida con tu padrino / comunidad",
+        b3: "Acceso a contenido y comunidad de póker",
+        joinBtn: "🚀 Unirme ahora",
+        inputPh: "¿Tienes un código? (ej: ABC123)",
+        goBtn: "🔑 Continuar con mi código",
+        tip: 'Consejo: también puedes compartir un enlace directo como <strong>/join/?ref=ABC123</strong>.'
+      }
+    };
+
+    function detectLang() {
+      const url = new URL(window.location.href);
+      const qLang = (url.searchParams.get("lang") || "").toLowerCase();
+      if (["fr","en","es"].includes(qLang)) return qLang;
+
+      const saved = (localStorage.getItem("pl_lang") || "").toLowerCase();
+      if (["fr","en","es"].includes(saved)) return saved;
+
+      const nav = (navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language || "fr").toLowerCase();
+      if (nav.startsWith("es")) return "es";
+      if (nav.startsWith("en")) return "en";
+      return "fr";
+    }
+
+    function applyLang(lang) {
+      const t = I18N[lang] || I18N.fr;
+      document.documentElement.lang = lang;
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+      const setHTML = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = value;
+      };
+
+      setText("t_title", t.title);
+      setText("t_subtitle", t.subtitle);
+      setText("t_cardTitle", t.cardTitle);
+      setText("t_b1", t.b1);
+      setText("t_b2", t.b2);
+      setText("t_b3", t.b3);
+      setText("t_joinBtn", t.joinBtn);
+
+      // placeholder + button
+      const input = document.getElementById("refInput");
+      if (input) input.placeholder = t.inputPh;
+
+      const goBtn = document.getElementById("goWithRef");
+      if (goBtn) goBtn.textContent = t.goBtn;
+
+      setHTML("t_tip", t.tip);
+
+      document.querySelectorAll(".lang-btn").forEach(b => {
+        b.classList.toggle("active", b.dataset.lang === lang);
+      });
+    }
+
+    function setLang(lang) {
+      if (!["fr","en","es"].includes(lang)) return;
+      localStorage.setItem("pl_lang", lang);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", lang);
+      window.history.replaceState({}, "", url.toString());
+
+      applyLang(lang);
+    }
+
+    const CURRENT_LANG = detectLang();
+    applyLang(CURRENT_LANG);
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".lang-btn");
+      if (btn) setLang(btn.dataset.lang);
+    });
+
+    // -------------------------
+    // Existing referral redirect logic (unchanged in behavior)
+    // Keeps lang when redirecting to /join/
+    // -------------------------
     const input = document.getElementById('refInput');
     const btn = document.getElementById('goWithRef');
 
@@ -205,13 +356,23 @@
         .toUpperCase();
     }
 
+    function currentLangParam() {
+      const url = new URL(window.location.href);
+      const lang = (url.searchParams.get("lang") || localStorage.getItem("pl_lang") || "").toLowerCase();
+      return ["fr","en","es"].includes(lang) ? lang : "";
+    }
+
     btn.addEventListener('click', () => {
       const code = cleanCode(input.value);
+      const lang = currentLangParam();
+
       if (!code) {
-        window.location.href = '/join/';
+        window.location.href = lang ? ('/join/?lang=' + encodeURIComponent(lang)) : '/join/';
         return;
       }
-      window.location.href = '/join/?ref=' + encodeURIComponent(code);
+
+      const base = '/join/?ref=' + encodeURIComponent(code);
+      window.location.href = lang ? (base + '&lang=' + encodeURIComponent(lang)) : base;
     });
 
     input.addEventListener('keydown', (e) => {
