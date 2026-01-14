@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Conditions générales d’utilisation PokerLink (FR/EN/ES)" />
+  <title>PokerLink — Conditions d’utilisation</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 820px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+
+    .logo { margin-bottom: 6px; }
+
+    .lang-switch {
+      display: inline-flex;
+      gap: 8px;
+      padding: 6px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+    }
+
+    .lang-btn {
+      border: 0;
+      background: transparent;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #374151;
+      transition: all .2s ease;
+      line-height: 1;
+    }
+
+    .lang-btn.active {
+      background: #059669;
+      color: white;
+    }
+
+    h1 {
+      color: #111827;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+    }
+
+    .meta {
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+
+    .content {
+      margin-top: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .section {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .section h2 {
+      color: #111827;
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .section p, .section li {
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .section ul {
+      padding-left: 18px;
+      margin-top: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .footer {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    a.link {
+      color: #059669;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    a.link:hover { text-decoration: underline; }
+
+    @media (max-width: 520px) {
+      .container { padding: 28px 18px; }
+      h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <div class="header">
+
+      <!-- ✅ LOGO: conservé -->
+      <div class="logo">
+        <img src="/assets/logo.png" alt="Poker Link" style="width:72px;height:72px;object-fit:contain;">
+      </div>
+
+      <div class="lang-switch" aria-label="Choisir la langue">
+        <button class="lang-btn" data-lang="fr" type="button">FR</button>
+        <button class="lang-btn" data-lang="en" type="button">EN</button>
+        <button class="lang-btn" data-lang="es" type="button">ES</button>
+      </div>
+
+      <h1 id="t_title">Conditions générales d’utilisation</h1>
+      <div class="meta" id="t_meta">Application : PokerLink — Date d’entrée en vigueur : 14 janvier 2026</div>
+    </div>
+
+    <div class="content" id="contentRoot"></div>
+
+    <div class="footer">
+      <div class="links">
+        <a class="link" href="/" id="t_home">Accueil</a>
+        <a class="link" href="/join/" id="t_join">Parrainage</a>
+        <a class="link" href="/privacy/" id="t_privacy">Confidentialité</a>
+      </div>
+      <div class="meta" id="t_footerNote">Dernière mise à jour : 14 janvier 2026</div>
+    </div>
+  </main>
+
+  <script>
+    // -------------------------
+    // i18n infra
+    // Priority: ?lang=  > saved choice > browser language
+    // -------------------------
+    function detectLang() {
+      const url = new URL(window.location.href);
+      const qLang = (url.searchParams.get("lang") || "").toLowerCase();
+      if (["fr","en","es"].includes(qLang)) return qLang;
+
+      const saved = (localStorage.getItem("pl_lang") || "").toLowerCase();
+      if (["fr","en","es"].includes(saved)) return saved;
+
+      const nav = (navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language || "fr").toLowerCase();
+      if (nav.startsWith("es")) return "es";
+      if (nav.startsWith("en")) return "en";
+      return "fr";
+    }
+
+    function setLang(lang) {
+      if (!["fr","en","es"].includes(lang)) return;
+      localStorage.setItem("pl_lang", lang);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", lang);
+      window.history.replaceState({}, "", url.toString());
+
+      render(lang);
+    }
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".lang-btn");
+      if (btn) setLang(btn.dataset.lang);
+    });
+
+    function setActiveLangUI(lang) {
+      document.documentElement.lang = lang;
+      document.querySelectorAll(".lang-btn").forEach(b => {
+        b.classList.toggle("active", b.dataset.lang === lang);
+      });
+    }
+
+    // -------------------------
+    // Content (FR provided by you + EN/ES translations)
+    // -------------------------
+    const CONTENT = {
+      fr: {
+        title: "Conditions générales d’utilisation",
+        meta: "Application : PokerLink — Date d’entrée en vigueur : 14 janvier 2026",
+        home: "Accueil",
+        join: "Parrainage",
+        privacy: "Confidentialité",
+        footerNote: "Dernière mise à jour : 14 janvier 2026",
+        sections: [
+          {
+            h: "1. Objet et acceptation",
+            p: [
+              "Les présentes Conditions d’utilisation (ci-après les “Conditions”) régissent l’accès et l’utilisation de l’application mobile PokerLink, éditée par Weeshiz (ci-après “nous” ou “PokerLink”).",
+              "En téléchargeant, accédant ou utilisant PokerLink, vous reconnaissez avoir lu, compris et accepté sans réserve ces Conditions.",
+              "Si vous n’acceptez pas ces Conditions, vous ne devez pas utiliser l’application."
+            ]
+          },
+          {
+            h: "2. Description du service",
+            p: [
+              "PokerLink est une application mobile gratuite (iOS et Android) permettant aux joueurs de poker de se connecter, échanger, créer des groupes, publier du contenu (textes, images, vidéos), participer à des événements et discuter via messagerie privée.",
+              "Certaines fonctionnalités sont gratuites, d’autres sont réservées aux utilisateurs “Power User” (statut premium).",
+              "Des publicités peuvent apparaître dans le fil d’actualité."
+            ]
+          },
+          {
+            h: "3. Conditions d’accès",
+            p: [
+              "L’application est réservée aux personnes âgées de 18 ans ou plus.",
+              "Un compte utilisateur est requis pour accéder aux fonctionnalités principales.",
+              "L’utilisateur s’engage à fournir des informations exactes et à maintenir son profil à jour."
+            ]
+          },
+          {
+            h: "4. Règles de conduite",
+            p: ["L’utilisateur s’engage à adopter un comportement respectueux et à ne pas :"],
+            ul: [
+              "Publier de contenu illégal, diffamatoire, haineux, violent, pornographique ou discriminatoire ;",
+              "Harceler, menacer ou intimider d’autres utilisateurs ;",
+              "Envoyer du spam, promouvoir des services ou jeux d’argent illégaux ;",
+              "Usurper l’identité d’autrui ;",
+              "Porter atteinte à la propriété intellectuelle de tiers ;",
+              "Utiliser l’application à des fins commerciales sans autorisation écrite de PokerLink."
+            ]
+          },
+          {
+            h: "4.1 Sanctions",
+            p: [
+              "Tout manquement à ces règles pourra entraîner la suspension ou suppression du compte."
+            ]
+          },
+          {
+            h: "5. Système de vérification et statuts",
+            p: ["PokerLink peut attribuer :"],
+            ul: [
+              "Un badge vérifié pour confirmer l’authenticité d’un profil ;",
+              "Un statut Power User donnant accès à des fonctionnalités premium."
+            ]
+          },
+          {
+            h: "5.1 Retrait des statuts",
+            p: [
+              "Ces statuts sont soumis à nos critères internes et peuvent être retirés à tout moment en cas d’abus."
+            ]
+          },
+          {
+            h: "6. Propriété intellectuelle",
+            p: ["a. Contenu utilisateur"],
+            ul: [
+              "L’utilisateur conserve la pleine propriété de ses contenus (textes, images, vidéos, etc.).",
+              "Cependant, en publiant sur PokerLink, il accorde à PokerLink une licence mondiale, non exclusive, gratuite et transférable pour afficher, héberger, reproduire et distribuer ses contenus dans le cadre du fonctionnement du service."
+            ]
+          },
+          {
+            h: "6.1 Contenu PokerLink",
+            p: [
+              "b. Contenu PokerLink",
+              "L’application, son design, son logo, son nom commercial et ses éléments techniques sont la propriété exclusive de Weeshiz / PokerLink et protégés par les lois sur la propriété intellectuelle."
+            ]
+          },
+          {
+            h: "7. Responsabilités",
+            p: ["PokerLink agit comme une plateforme d’hébergement et n’est pas responsable :"],
+            ul: [
+              "Du contenu publié par les utilisateurs ;",
+              "Des propos, images ou vidéos diffusés via la plateforme ;",
+              "Des événements poker organisés par des tiers ;",
+              "D’éventuelles interruptions, bugs ou pertes de données."
+            ]
+          },
+          {
+            h: "7.1 Service “tel quel”",
+            p: [
+              "Le service est fourni “tel quel”, sans garantie de disponibilité continue ni de performance."
+            ]
+          },
+          {
+            h: "8. Suspension et résiliation",
+            p: ["PokerLink se réserve le droit de suspendre, limiter ou supprimer le compte d’un utilisateur en cas :"],
+            ul: [
+              "De violation des présentes Conditions ;",
+              "De comportement contraire à la loi ou à l’éthique du service ;",
+              "D’utilisation frauduleuse du compte."
+            ]
+          },
+          {
+            h: "8.1 Suppression de compte",
+            p: [
+              "L’utilisateur peut à tout moment supprimer son compte depuis les paramètres de l’application.",
+              "Certaines données peuvent être conservées temporairement pour se conformer aux obligations légales."
+            ]
+          },
+          {
+            h: "9. Modifications des Conditions",
+            p: [
+              "PokerLink peut modifier les présentes Conditions à tout moment.",
+              "Les utilisateurs seront informés par notification ou e-mail.",
+              "L’utilisation continue de l’application après modification vaut acceptation des nouvelles Conditions."
+            ]
+          },
+          {
+            h: "10. Droit applicable et juridiction compétente",
+            p: [
+              "Les présentes Conditions sont régies par le droit français.",
+              "Tout litige sera soumis à la juridiction exclusive des tribunaux français compétents."
+            ]
+          },
+          {
+            h: "11. Contact",
+            p: [
+              "Pour toute question :",
+              "📧 contact@weeshiz.com"
+            ]
+          }
+        ]
+      },
+
+      en: {
+        title: "Terms of Service",
+        meta: "App: PokerLink — Effective date: January 14, 2026",
+        home: "Home",
+        join: "Referral",
+        privacy: "Privacy",
+        footerNote: "Last updated: January 14, 2026",
+        sections: [
+          {
+            h: "1. Purpose and acceptance",
+            p: [
+              "These Terms of Service (the “Terms”) govern access to and use of the PokerLink mobile application, published by Weeshiz (“we” or “PokerLink”).",
+              "By downloading, accessing, or using PokerLink, you acknowledge that you have read, understood, and unconditionally accepted these Terms.",
+              "If you do not accept these Terms, you must not use the application."
+            ]
+          },
+          {
+            h: "2. Service description",
+            p: [
+              "PokerLink is a free mobile application (iOS and Android) that allows poker players to connect, chat, create groups, publish content (text, images, videos), join events, and communicate via private messaging.",
+              "Some features are free, while others are reserved for “Power User” (premium) users.",
+              "Ads may appear in the news feed."
+            ]
+          },
+          {
+            h: "3. Access conditions",
+            p: [
+              "The application is intended for persons aged 18 or older.",
+              "A user account is required to access core features.",
+              "Users agree to provide accurate information and keep their profile up to date."
+            ]
+          },
+          {
+            h: "4. Code of conduct",
+            p: ["Users agree to behave respectfully and not to:"],
+            ul: [
+              "Post illegal, defamatory, hateful, violent, pornographic, or discriminatory content;",
+              "Harass, threaten, or intimidate other users;",
+              "Send spam, or promote illegal services or illegal gambling;",
+              "Impersonate others;",
+              "Infringe third-party intellectual property rights;",
+              "Use the application for commercial purposes without PokerLink’s prior written permission."
+            ]
+          },
+          {
+            h: "4.1 Enforcement",
+            p: [
+              "Any breach of these rules may result in suspension or deletion of the account."
+            ]
+          },
+          {
+            h: "5. Verification system and statuses",
+            p: ["PokerLink may grant:"],
+            ul: [
+              "A verified badge to confirm the authenticity of a profile;",
+              "A Power User status providing access to premium features."
+            ]
+          },
+          {
+            h: "5.1 Status removal",
+            p: [
+              "These statuses are subject to internal criteria and may be revoked at any time in case of abuse."
+            ]
+          },
+          {
+            h: "6. Intellectual property",
+            p: ["a. User content"],
+            ul: [
+              "Users retain full ownership of their content (text, images, videos, etc.).",
+              "However, by posting on PokerLink, users grant PokerLink a worldwide, non-exclusive, royalty-free, and transferable license to display, host, reproduce, and distribute such content for the operation of the service."
+            ]
+          },
+          {
+            h: "6.1 PokerLink content",
+            p: [
+              "b. PokerLink content",
+              "The application, its design, logo, trade name, and technical elements are the exclusive property of Weeshiz / PokerLink and are protected by intellectual property laws."
+            ]
+          },
+          {
+            h: "7. Liability",
+            p: ["PokerLink acts as a hosting platform and is not responsible for:"],
+            ul: [
+              "Content published by users;",
+              "Statements, images, or videos shared via the platform;",
+              "Poker events organized by third parties;",
+              "Interruptions, bugs, or data loss."
+            ]
+          },
+          {
+            h: "7.1 “As is” service",
+            p: [
+              "The service is provided “as is”, without any warranty of continuous availability or performance."
+            ]
+          },
+          {
+            h: "8. Suspension and termination",
+            p: ["PokerLink reserves the right to suspend, limit, or delete a user account in case of:"],
+            ul: [
+              "Violation of these Terms;",
+              "Conduct contrary to law or the service’s ethics;",
+              "Fraudulent use of the account."
+            ]
+          },
+          {
+            h: "8.1 Account deletion",
+            p: [
+              "Users may delete their account at any time from the app settings.",
+              "Some data may be temporarily retained to comply with legal obligations."
+            ]
+          },
+          {
+            h: "9. Changes to the Terms",
+            p: [
+              "PokerLink may modify these Terms at any time.",
+              "Users will be informed via notification or email.",
+              "Continued use of the application after changes constitutes acceptance of the updated Terms."
+            ]
+          },
+          {
+            h: "10. Governing law and jurisdiction",
+            p: [
+              "These Terms are governed by French law.",
+              "Any dispute shall be subject to the exclusive jurisdiction of the competent French courts."
+            ]
+          },
+          {
+            h: "11. Contact",
+            p: [
+              "For any questions:",
+              "📧 contact@weeshiz.com"
+            ]
+          }
+        ]
+      },
+
+      es: {
+        title: "Términos de Servicio",
+        meta: "Aplicación: PokerLink — Fecha de entrada en vigor: 14 de enero de 2026",
+        home: "Inicio",
+        join: "Referidos",
+        privacy: "Privacidad",
+        footerNote: "Última actualización: 14 de enero de 2026",
+        sections: [
+          {
+            h: "1. Objeto y aceptación",
+            p: [
+              "Estos Términos de Servicio (los “Términos”) regulan el acceso y el uso de la aplicación móvil PokerLink, editada por Weeshiz (“nosotros” o “PokerLink”).",
+              "Al descargar, acceder o utilizar PokerLink, reconoces que has leído, comprendido y aceptado sin reservas estos Términos.",
+              "Si no aceptas estos Términos, no debes utilizar la aplicación."
+            ]
+          },
+          {
+            h: "2. Descripción del servicio",
+            p: [
+              "PokerLink es una aplicación móvil gratuita (iOS y Android) que permite a los jugadores de póker conectarse, conversar, crear grupos, publicar contenido (texto, imágenes, vídeos), participar en eventos y comunicarse mediante mensajería privada.",
+              "Algunas funciones son gratuitas y otras están reservadas para usuarios “Power User” (premium).",
+              "Pueden aparecer anuncios en el feed."
+            ]
+          },
+          {
+            h: "3. Condiciones de acceso",
+            p: [
+              "La aplicación está reservada a personas de 18 años o más.",
+              "Se requiere una cuenta de usuario para acceder a las funciones principales.",
+              "El usuario se compromete a proporcionar información exacta y a mantener su perfil actualizado."
+            ]
+          },
+          {
+            h: "4. Normas de conducta",
+            p: ["El usuario se compromete a comportarse de forma respetuosa y a no:"],
+            ul: [
+              "Publicar contenido ilegal, difamatorio, de odio, violento, pornográfico o discriminatorio;",
+              "Acosar, amenazar o intimidar a otros usuarios;",
+              "Enviar spam o promocionar servicios o juegos de azar ilegales;",
+              "Suplantar la identidad de otra persona;",
+              "Vulnerar la propiedad intelectual de terceros;",
+              "Usar la aplicación con fines comerciales sin autorización escrita previa de PokerLink."
+            ]
+          },
+          {
+            h: "4.1 Medidas",
+            p: [
+              "El incumplimiento de estas normas puede dar lugar a la suspensión o eliminación de la cuenta."
+            ]
+          },
+          {
+            h: "5. Sistema de verificación y estados",
+            p: ["PokerLink puede otorgar:"],
+            ul: [
+              "Un distintivo verificado para confirmar la autenticidad de un perfil;",
+              "Un estado Power User que da acceso a funciones premium."
+            ]
+          },
+          {
+            h: "5.1 Retirada de estados",
+            p: [
+              "Estos estados están sujetos a criterios internos y pueden retirarse en cualquier momento en caso de abuso."
+            ]
+          },
+          {
+            h: "6. Propiedad intelectual",
+            p: ["a. Contenido del usuario"],
+            ul: [
+              "El usuario conserva la plena propiedad de sus contenidos (textos, imágenes, vídeos, etc.).",
+              "Sin embargo, al publicar en PokerLink, concede a PokerLink una licencia mundial, no exclusiva, gratuita y transferible para mostrar, alojar, reproducir y distribuir sus contenidos en el marco del funcionamiento del servicio."
+            ]
+          },
+          {
+            h: "6.1 Contenido de PokerLink",
+            p: [
+              "b. Contenido de PokerLink",
+              "La aplicación, su diseño, su logo, su nombre comercial y sus elementos técnicos son propiedad exclusiva de Weeshiz / PokerLink y están protegidos por las leyes de propiedad intelectual."
+            ]
+          },
+          {
+            h: "7. Responsabilidades",
+            p: ["PokerLink actúa como plataforma de alojamiento y no es responsable de:"],
+            ul: [
+              "El contenido publicado por los usuarios;",
+              "Declaraciones, imágenes o vídeos difundidos a través de la plataforma;",
+              "Eventos de póker organizados por terceros;",
+              "Interrupciones, errores o pérdida de datos."
+            ]
+          },
+          {
+            h: "7.1 Servicio “tal cual”",
+            p: [
+              "El servicio se proporciona “tal cual”, sin garantía de disponibilidad continua ni de rendimiento."
+            ]
+          },
+          {
+            h: "8. Suspensión y rescisión",
+            p: ["PokerLink se reserva el derecho de suspender, limitar o eliminar la cuenta de un usuario en caso de:"],
+            ul: [
+              "Violación de estos Términos;",
+              "Comportamiento contrario a la ley o a la ética del servicio;",
+              "Uso fraudulento de la cuenta."
+            ]
+          },
+          {
+            h: "8.1 Eliminación de cuenta",
+            p: [
+              "El usuario puede eliminar su cuenta en cualquier momento desde los ajustes de la aplicación.",
+              "Algunos datos pueden conservarse temporalmente para cumplir con obligaciones legales."
+            ]
+          },
+          {
+            h: "9. Modificaciones de los Términos",
+            p: [
+              "PokerLink puede modificar estos Términos en cualquier momento.",
+              "Los usuarios serán informados mediante notificación o correo electrónico.",
+              "El uso continuado tras una modificación implica la aceptación de los nuevos Términos."
+            ]
+          },
+          {
+            h: "10. Ley aplicable y jurisdicción competente",
+            p: [
+              "Estos Términos se rigen por el derecho francés.",
+              "Cualquier litigio se someterá a la jurisdicción exclusiva de los tribunales franceses competentes."
+            ]
+          },
+          {
+            h: "11. Contacto",
+            p: [
+              "Para cualquier consulta:",
+              "📧 contact@weeshiz.com"
+            ]
+          }
+        ]
+      }
+    };
+
+    function render(lang) {
+      setActiveLangUI(lang);
+
+      const t = CONTENT[lang] || CONTENT.fr;
+      document.getElementById("t_title").textContent = t.title;
+      document.getElementById("t_meta").textContent = t.meta;
+      document.getElementById("t_home").textContent = t.home;
+      document.getElementById("t_join").textContent = t.join;
+      document.getElementById("t_privacy").textContent = t.privacy;
+      document.getElementById("t_footerNote").textContent = t.footerNote;
+
+      const root = document.getElementById("contentRoot");
+      root.innerHTML = "";
+
+      t.sections.forEach(sec => {
+        const card = document.createElement("section");
+        card.className = "section";
+
+        const h2 = document.createElement("h2");
+        h2.textContent = sec.h;
+        card.appendChild(h2);
+
+        (sec.p || []).forEach(par => {
+          const p = document.createElement("p");
+          p.textContent = par;
+          card.appendChild(p);
+        });
+
+        if (sec.ul && sec.ul.length) {
+          const ul = document.createElement("ul");
+          sec.ul.forEach(liText => {
+            const li = document.createElement("li");
+            li.textContent = liText;
+            ul.appendChild(li);
+          });
+          card.appendChild(ul);
+        }
+
+        root.appendChild(card);
+      });
+    }
+
+    const CURRENT_LANG = detectLang();
+    render(CURRENT_LANG);
+  </script>
+</body>
+</html>
