@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Redirection…</title>
+  <script>
+    (function () {
+      // Exemples attendus :
+      // /join/ABC123
+      // /join/ABC123/
+      var path = window.location.pathname || "/";
+      var match = path.match(/^\/join\/([^\/]+)\/?$/i);
+
+      if (match && match[1]) {
+        var code = match[1];
+        // Redirige vers la version query param gérée par ta page join/
+        window.location.replace("/join/?ref=" + encodeURIComponent(code));
+        return;
+      }
+
+      // Si on arrive ici via une autre URL inconnue, on renvoie à l'accueil
+      window.location.replace("/");
+    })();
+  </script>
+</head>
+<body></body>
+</html>
