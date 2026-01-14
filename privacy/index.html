@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Politique de confidentialité PokerLink (FR/EN/ES)" />
+  <title>PokerLink — Politique de Confidentialité</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 820px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+
+    .logo { margin-bottom: 6px; }
+
+    /* Language switcher */
+    .lang-switch {
+      display: inline-flex;
+      gap: 8px;
+      padding: 6px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+    }
+
+    .lang-btn {
+      border: 0;
+      background: transparent;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #374151;
+      transition: all .2s ease;
+      line-height: 1;
+    }
+
+    .lang-btn.active {
+      background: #059669;
+      color: white;
+    }
+
+    h1 {
+      color: #111827;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+    }
+
+    .meta {
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+
+    .content {
+      margin-top: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .section {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .section h2 {
+      color: #111827;
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .section p, .section li {
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .section ul {
+      padding-left: 18px;
+      margin-top: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .note {
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .footer {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    a.link {
+      color: #059669;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    a.link:hover { text-decoration: underline; }
+
+    @media (max-width: 520px) {
+      .container { padding: 28px 18px; }
+      h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <div class="header">
+
+      <!-- ✅ LOGO: conservé -->
+      <div class="logo">
+        <img src="/assets/logo.png" alt="Poker Link" style="width:72px;height:72px;object-fit:contain;">
+      </div>
+
+      <div class="lang-switch" aria-label="Choisir la langue">
+        <button class="lang-btn" data-lang="fr" type="button">FR</button>
+        <button class="lang-btn" data-lang="en" type="button">EN</button>
+        <button class="lang-btn" data-lang="es" type="button">ES</button>
+      </div>
+
+      <h1 id="t_title">Politique de Confidentialité</h1>
+      <div class="meta" id="t_meta">Application : PokerLink — Date d’entrée en vigueur : 9 octobre 2025</div>
+    </div>
+
+    <div class="content" id="contentRoot">
+      <!-- Sections injected by JS -->
+    </div>
+
+    <div class="footer">
+      <div class="links">
+        <a class="link" href="/" id="t_home">Accueil</a>
+        <a class="link" href="/join/" id="t_join">Parrainage</a>
+      </div>
+      <div class="note" id="t_footerNote">Dernière mise à jour : 14 janvier 2026</div>
+    </div>
+  </main>
+
+  <script>
+    // -------------------------
+    // i18n infra
+    // Priority: ?lang=  > saved choice > browser language
+    // -------------------------
+    function detectLang() {
+      const url = new URL(window.location.href);
+      const qLang = (url.searchParams.get("lang") || "").toLowerCase();
+      if (["fr","en","es"].includes(qLang)) return qLang;
+
+      const saved = (localStorage.getItem("pl_lang") || "").toLowerCase();
+      if (["fr","en","es"].includes(saved)) return saved;
+
+      const nav = (navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language || "fr").toLowerCase();
+      if (nav.startsWith("es")) return "es";
+      if (nav.startsWith("en")) return "en";
+      return "fr";
+    }
+
+    function setLang(lang) {
+      if (!["fr","en","es"].includes(lang)) return;
+      localStorage.setItem("pl_lang", lang);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", lang);
+      window.history.replaceState({}, "", url.toString());
+
+      render(lang);
+    }
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".lang-btn");
+      if (btn) setLang(btn.dataset.lang);
+    });
+
+    function setActiveLangUI(lang) {
+      document.documentElement.lang = lang;
+      document.querySelectorAll(".lang-btn").forEach(b => {
+        b.classList.toggle("active", b.dataset.lang === lang);
+      });
+    }
+
+    // -------------------------
+    // Content (FR provided by you + EN/ES translations)
+    // -------------------------
+    const CONTENT = {
+      fr: {
+        title: "Politique de Confidentialité",
+        meta: "Application : PokerLink — Date d’entrée en vigueur : 14 janvier 2026",
+        home: "Accueil",
+        join: "Parrainage",
+        footerNote: "Dernière mise à jour : 14 janvier 2026",
+        sections: [
+          {
+            h: "1. Introduction",
+            p: [
+              "Bienvenue sur PokerLink, une application mobile de réseau social dédiée aux joueurs de poker.",
+              "Nous accordons une importance particulière à la protection de vos données personnelles et à votre vie privée.",
+              "Cette politique de confidentialité explique comment nous collectons, utilisons, stockons et partageons vos informations conformément au Règlement Général sur la Protection des Données (RGPD - UE 2016/679), ainsi qu’aux exigences de l’App Store et de Google Play.",
+              "En utilisant PokerLink, vous acceptez les pratiques décrites dans cette politique."
+            ]
+          },
+          {
+            h: "2. Responsable du traitement",
+            p: [
+              "Le responsable du traitement des données est :",
+              "Weeshiz",
+              "📧 contact@weeshiz.com",
+              "Les serveurs et la base de données (Bolt Database) sont hébergés dans l’Union européenne."
+            ]
+          },
+          {
+            h: "3. Données collectées",
+            p: ["Nous collectons les types de données suivants :"],
+            ul: [
+              "a. Informations de compte : Adresse e-mail, Pseudo, Mot de passe (hashé et jamais stocké en clair)",
+              "b. Profil utilisateur (optionnel) : Nom et Prénom, Photo de profil, Bio, Ville, Genre, Date de naissance",
+              "c. Contenu généré par l’utilisateur : Publications, photos, vidéos, commentaires, Messages privés, Interactions (likes, partages, suivis)",
+              "d. Données d’utilisation : Fréquence d’utilisation, Historique de navigation interne, Préférences de notification",
+              "e. Localisation : Ville (optionnelle), Localisation des événements poker (si activée)"
+            ]
+          },
+          {
+            h: "4. Finalités de traitement",
+            p: ["Vos données sont utilisées pour :"],
+            ul: [
+              "Fournir et améliorer le service PokerLink",
+              "Créer et gérer votre compte",
+              "Personnaliser votre expérience utilisateur",
+              "Envoyer des notifications (événements, messages, nouveautés)",
+              "Afficher des publicités ciblées dans le feed",
+              "Analyser les performances et l’utilisation de l’application",
+              "Respecter nos obligations légales et de sécurité"
+            ]
+          },
+          {
+            h: "5. Base légale du traitement",
+            p: ["Les traitements reposent sur :"],
+            ul: [
+              "Votre consentement (profil, notifications, publicité ciblée)",
+              "L’exécution du contrat (fourniture du service)",
+              "L’intérêt légitime (sécurité, amélioration du service)",
+              "Les obligations légales (conservation et conformité réglementaire)"
+            ]
+          },
+          {
+            h: "6. Partage des données",
+            p: [
+              "Nous ne vendons pas vos données.",
+              "Nous partageons certaines informations uniquement avec :"
+            ],
+            ul: [
+              "Bolt Database (hébergement sécurisé UE)",
+              "Services d’analyse (pour améliorer l’application)",
+              "Publics visibles : les profils et publications publics peuvent être vus par d’autres utilisateurs de PokerLink."
+            ]
+          },
+          {
+            h: "7. Durée de conservation",
+            p: [
+              "Vos données sont conservées aussi longtemps que nécessaire pour fournir le service ou respecter les obligations légales.",
+              "En cas de suppression de votre compte, vos données sont effacées ou anonymisées sous 30 jours."
+            ]
+          },
+          {
+            h: "8. Droits des utilisateurs (RGPD)",
+            p: ["Conformément au RGPD, vous disposez des droits suivants :"],
+            ul: [
+              "Droit d’accès à vos données",
+              "Droit de rectification des informations incorrectes",
+              "Droit à l’effacement (droit à l’oubli)",
+              "Droit à la portabilité de vos données",
+              "Droit d’opposition à certains traitements",
+              "Droit de retrait du consentement à tout moment"
+            ]
+          },
+          {
+            h: "8.1 Exercer vos droits",
+            p: [
+              "Vous pouvez exercer ces droits directement via l’application (paramètres du compte → “Supprimer le compte”) ou en contactant contact@weeshiz.com."
+            ]
+          },
+          {
+            h: "9. Sécurité des données",
+            p: [
+              "Nous mettons en place des mesures techniques et organisationnelles (chiffrement, contrôle d’accès, stockage sécurisé) afin de protéger vos données contre tout accès, modification ou destruction non autorisés."
+            ]
+          },
+          {
+            h: "10. Publicités et contenus tiers",
+            p: [
+              "Des publicités peuvent être affichées dans le feed. Ces partenaires peuvent utiliser des cookies ou identifiants pour personnaliser les annonces.",
+              "Vous pouvez gérer vos préférences publicitaires dans les paramètres de l’application."
+            ]
+          },
+          {
+            h: "11. Utilisation par des mineurs",
+            p: [
+              "PokerLink est réservée aux utilisateurs âgés de 18 ans et plus.",
+              "Aucun compte ne doit être créé par une personne mineure."
+            ]
+          },
+          {
+            h: "12. Modifications de la politique",
+            p: [
+              "Nous pouvons mettre à jour cette politique à tout moment.",
+              "Les utilisateurs seront informés des modifications importantes via notification ou email."
+            ]
+          },
+          {
+            h: "13. Contact",
+            p: [
+              "Pour toute question concernant la confidentialité :",
+              "📧 contact@weeshiz.com"
+            ]
+          }
+        ]
+      },
+
+      en: {
+        title: "Privacy Policy",
+        meta: "App: PokerLink — Effective date: January 14, 2026",
+        home: "Home",
+        join: "Referral",
+        footerNote: "Last updated: January 14, 2026",
+        sections: [
+          {
+            h: "1. Introduction",
+            p: [
+              "Welcome to PokerLink, a mobile social networking app dedicated to poker players.",
+              "We place great importance on protecting your personal data and your privacy.",
+              "This privacy policy explains how we collect, use, store, and share your information in accordance with the General Data Protection Regulation (GDPR - EU 2016/679), as well as App Store and Google Play requirements.",
+              "By using PokerLink, you agree to the practices described in this policy."
+            ]
+          },
+          {
+            h: "2. Data controller",
+            p: [
+              "The data controller is:",
+              "Weeshiz",
+              "📧 co
