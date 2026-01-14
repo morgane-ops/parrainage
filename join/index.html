@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rejoins Poker Link avec mon code de parrainage et profite d'avantages exclusifs !">
+    <title>Rejoins Poker Link</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #1f2937;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 16px;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .referral-code-section {
+            background: #f9fafb;
+            border: 3px dashed #059669;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .referral-label {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .referral-code {
+            color: #059669;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .store-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .store-button.ios {
+            background: #000000;
+            color: white;
+        }
+
+        .store-button.ios:hover {
+            background: #1f2937;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .store-button.android {
+            background: #059669;
+            color: white;
+        }
+
+        .store-button.android:hover {
+            background: #047857;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+        }
+
+        .store-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 24px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #e5e7eb;
+            border-top: 3px solid #059669;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #6b7280;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .info {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .benefit-icon {
+            font-size: 24px;
+        }
+
+        .benefit-text {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 28px 20px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .referral-code {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🃏</div>
+        <h1>Rejoins Poker Link</h1>
+        <p class="subtitle">Télécharge l'app et utilise mon code de parrainage pour profiter d'avantages exclusifs !</p>
+
+        <div class="referral-code-section">
+            <div class="referral-label">Code de parrainage</div>
+            <div class="referral-code" id="referralCode">...</div>
+        </div>
+
+        <div id="buttonGroup" class="button-group">
+            <a href="#" id="iosButton" class="store-button ios">
+                <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                </svg>
+                Télécharger sur iOS
+            </a>
+
+            <a href="#" id="androidButton" class="store-button android">
+                <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                </svg>
+                Télécharger sur Android
+            </a>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p class="loading-text">Redirection en cours...</p>
+        </div>
+
+        <div class="info">
+            <div class="benefit">
+                <span class="benefit-icon">🎁</span>
+                <span class="benefit-text">Bonus de bienvenue avec le code parrainage</span>
+            </div>
+            <div class="benefit">
+                <span class="benefit-icon">🔗</span>
+                <span class="benefit-text">Connexion automatique avec ton parrain</span>
+            </div>
+            <div class="benefit">
+                <span class="benefit-icon">⭐</span>
+                <span class="benefit-text">Accès à la communauté poker exclusive</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Extraction du code de parrainage depuis l'URL
+        function getReferralCode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const referral = urlParams.get('referral') || urlParams.get('code') || urlParams.get('ref');
+            
+            // Alternative: extraction depuis le path (/join/ABC123)
+            if (!referral) {
+                const pathMatch = window.location.pathname.match(/\/join\/([A-Z0-9]+)/i);
+                return pathMatch ? pathMatch[1] : 'INVITE';
+            }
+            
+            return referral;
+        }
+
+        // Détection du système d'exploitation
+        function detectOS() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            
+            // iOS detection
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return 'iOS';
+            }
+            
+            // Android detection
+            if (/android/i.test(userAgent)) {
+                return 'Android';
+            }
+            
+            // Desktop or unknown
+            return 'Unknown';
+        }
+
+        // Configuration des URLs des stores
+        const STORE_URLS = {
+            ios: 'https://apps.apple.com/app/poker-link/id6738596319', // Remplace avec ton vrai App Store URL
+            android: 'https://play.google.com/store/apps/details?id=com.pokerlink.app' // Remplace avec ton vrai Play Store URL
+        };
+
+        // Initialisation
+        const referralCode = getReferralCode();
+        const os = detectOS();
+
+        // Afficher le code de parrainage
+        document.getElementById('referralCode').textContent = referralCode;
+
+        // Configuration des boutons
+        const iosButton = document.getElementById('iosButton');
+        const androidButton = document.getElementById('androidButton');
+        const buttonGroup = document.getElementById('buttonGroup');
+        const loading = document.getElementById('loading');
+
+        // Deep link avec le code de parrainage
+        const deepLink = `pokerlink://join/${referralCode}`;
+
+        // Ajouter le code de parrainage aux URLs des stores (optionnel selon les stores)
+        iosButton.href = STORE_URLS.ios;
+        androidButton.href = STORE_URLS.android;
+
+        // Fonction de redirection automatique
+        function autoRedirect() {
+            // Tenter d'ouvrir le deep link
+            window.location.href = deepLink;
+
+            // Afficher le loading
+            buttonGroup.style.display = 'none';
+            loading.classList.add('active');
+
+            // Après 2 secondes, rediriger vers le store approprié
+            setTimeout(() => {
+                if (os === 'iOS') {
+                    window.location.href = STORE_URLS.ios;
+                } else if (os === 'Android') {
+                    window.location.href = STORE_URLS.android;
+                } else {
+                    // Si OS inconnu, afficher les boutons de choix
+                    buttonGroup.style.display = 'flex';
+                    loading.classList.remove('active');
+                }
+            }, 2500);
+        }
+
+        // Lancer la redirection automatique uniquement sur mobile
+        if (os === 'iOS' || os === 'Android') {
+            // Redirection automatique après un court délai pour que l'utilisateur voit le code
+            setTimeout(autoRedirect, 1500);
+        }
+
+        // Analytics (optionnel)
+        console.log('Referral Code:', referralCode);
+        console.log('Detected OS:', os);
+    </script>
+</body>
+</html>
