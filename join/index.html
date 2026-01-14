@@ -29,13 +29,13 @@
       text-align: center;
     }
 
-    .logo { font-size: 64px; margin-bottom: 20px; }
+    .logo { margin-bottom: 12px; }
 
     h1 {
       color: #1f2937;
       font-size: 32px;
       font-weight: 700;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
     }
 
     .subtitle {
@@ -182,9 +182,11 @@
 
 <body>
   <div class="container">
-<div class="logo">
-  <img src="/assets/logo.png" alt="Poker Link" style="width:72px;height:72px;object-fit:contain;">
-</div>
+
+    <!-- ✅ LOGO (garde ce bloc ou remets exactement le tien si différent) -->
+    <div class="logo">
+      <img src="/assets/logo.png" alt="Poker Link" style="width:72px;height:72px;object-fit:contain;">
+    </div>
 
     <h1 id="t_title">Rejoins Poker Link</h1>
     <p class="subtitle" id="t_subtitle">
@@ -197,7 +199,8 @@
       <button class="lang-btn" data-lang="es" type="button">ES</button>
     </div>
 
-    <div class="referral-code-section">
+    <!-- Referral section (can be hidden when coming from home without code) -->
+    <div class="referral-code-section" id="refSection">
       <div class="referral-label" id="t_refLabel">Code de parrainage</div>
       <div class="referral-code" id="referralCode">...</div>
     </div>
@@ -322,7 +325,6 @@
       if (!["fr","en","es"].includes(lang)) return;
       localStorage.setItem("pl_lang", lang);
 
-      // Keep lang in URL (no reload) while preserving referral params
       const url = new URL(window.location.href);
       url.searchParams.set("lang", lang);
       window.history.replaceState({}, "", url.toString());
@@ -356,10 +358,14 @@
       return referral;
     }
 
+    function hasReferralInQuery() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return !!(urlParams.get('referral') || urlParams.get('code') || urlParams.get('ref'));
+    }
+
     // OS detection
     function detectOS() {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
       if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) return 'iOS';
       if (/android/i.test(userAgent)) return 'Android';
       return 'Unknown';
@@ -375,8 +381,19 @@
     const referralCode = (getReferralCode() || 'INVITE').toString().trim();
     const os = detectOS();
 
-    // Display code
+    // Display code (even if section is hidden, doesn't hurt)
     document.getElementById('referralCode').textContent = referralCode;
+
+    // ✅ NEW: if user comes from home without a code, hide the referral section
+    (function () {
+      const url = new URL(window.location.href);
+      const from = (url.searchParams.get("from") || "").toLowerCase();
+      const hasRef = hasReferralInQuery();
+      if (from === "home" && !hasRef) {
+        const sec = document.getElementById("refSection");
+        if (sec) sec.style.display = "none";
+      }
+    })();
 
     // Buttons + loading
     const iosButton = document.getElementById('iosButton');
@@ -384,7 +401,7 @@
     const buttonGroup = document.getElementById('buttonGroup');
     const loading = document.getElementById('loading');
 
-    // Deep link with code (your app receives /join/{code})
+    // Deep link with code
     const deepLink = `pokerlink://join/${encodeURIComponent(referralCode)}`;
 
     iosButton.href = STORE_URLS.ios;
@@ -408,6 +425,7 @@
       }, 2500);
     }
 
+    // Only auto redirect on mobile
     if (os === 'iOS' || os === 'Android') {
       setTimeout(autoRedirect, 1500);
     }
