@@ -381,3 +381,77 @@
   </script>
 </body>
 </html>
+<!-- ===== Poker Link – Legal Footer (Privacy / Terms) ===== -->
+<style>
+  .footer {
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+  }
+
+  .footer a {
+    color: #6b7280;
+    text-decoration: none;
+    font-weight: 800;
+  }
+
+  .footer a:hover {
+    color: #059669;
+    text-decoration: underline;
+  }
+</style>
+
+<footer class="footer">
+  <a href="/privacy/" id="t_privacy">Privacy</a>
+  <span>•</span>
+  <a href="/terms/" id="t_terms">Terms of Service</a>
+</footer>
+
+<script>
+  (function () {
+    // Traductions fallback (n'écrase rien si déjà défini)
+    const LEGAL_I18N = {
+      fr: {
+        privacy: "Confidentialité",
+        terms: "Conditions d’utilisation"
+      },
+      en: {
+        privacy: "Privacy",
+        terms: "Terms of Service"
+      },
+      es: {
+        privacy: "Privacidad",
+        terms: "Términos de servicio"
+      }
+    };
+
+    function detectLang() {
+      const url = new URL(window.location.href);
+      const q = (url.searchParams.get("lang") || "").toLowerCase();
+      if (["fr","en","es"].includes(q)) return q;
+
+      const saved = (localStorage.getItem("pl_lang") || "").toLowerCase();
+      if (["fr","en","es"].includes(saved)) return saved;
+
+      const nav = (navigator.language || "fr").toLowerCase();
+      if (nav.startsWith("es")) return "es";
+      if (nav.startsWith("en")) return "en";
+      return "fr";
+    }
+
+    const lang = detectLang();
+    const t = LEGAL_I18N[lang] || LEGAL_I18N.fr;
+
+    const privacyEl = document.getElementById("t_privacy");
+    const termsEl = document.getElementById("t_terms");
+
+    if (privacyEl) privacyEl.textContent = t.privacy;
+    if (termsEl) termsEl.textContent = t.terms;
+  })();
+</script>
+<!-- ===== End Legal Footer ===== -->
