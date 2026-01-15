@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.pokerlink.app",
+      "sha256_cert_fingerprints": [
+        "AB:12:60:7D:03:99:E3:12:70:AE:79:10:66:48:81:98:A1:74:3E:39:DB:A6:4B:7D:86:B3:F5:9C:48:86:56:2B"
+      ]
+    }
+  }
+]
