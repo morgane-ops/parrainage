@@ -4,28 +4,46 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Redirection…</title>
+
   <script>
     (function () {
-      var path = window.location.pathname || "/";
+      var path = window.location.pathname || "";
+      var search = window.location.search || "";
+      var hash = window.location.hash || "";
 
-      // ✅ IMPORTANT : ne JAMAIS rediriger tout ce qui est /.well-known/*
-      // (Google Play assetlinks.json + iOS apple-app-site-association)
-      if (path.indexOf("/.well-known/") === 0) {
-        // On laisse le serveur (GitHub Pages) répondre.
-        // Si le fichier existe, il sera servi normalement.
-        // Si le fichier n'existe pas, ce sera une vraie 404 (et c'est OK).
+      // 🚨 1. NE JAMAIS intercepter les liens d'authentification
+      // (reset password, magic link, confirmation email, etc.)
+      if (
+        search.includes("access_token") ||
+        hash.includes("access_token") ||
+        search.includes("refresh_token") ||
+        hash.includes("refresh_token") ||
+        search.includes("type=recovery") ||
+        search.includes("type=magiclink") ||
+        path.startsWith("/reset-password") ||
+        path.startsWith("/auth") ||
+        path.startsWith("/callback")
+      ) {
+        return; // on laisse l'app / le navigateur gérer
+      }
+
+      // 🚨 2. NE JAMAIS intercepter les fichiers système
+      if (path.startsWith("/.well-known/")) {
         return;
       }
 
-      // ✅ Fallback parrainage : /join/ABC123 -> /join/?ref=ABC123
+      // ✅ 3. Gérer UNIQUEMENT les liens de parrainage /join/ABC123
       var match = path.match(/^\/join\/([^\/]+)\/?$/i);
+
       if (match && match[1]) {
         var code = match[1];
-        window.location.replace("/join/?ref=" + encodeURIComponent(code));
+        window.location.replace(
+          "/join/?ref=" + encodeURIComponent(code)
+        );
         return;
       }
 
-      // Sinon on renvoie à l'accueil
+      // 🔁 4. Tout le reste → accueil
       window.location.replace("/");
     })();
   </script>
