@@ -32,18 +32,27 @@
         return;
       }
 
-      // ✅ 3. Gérer UNIQUEMENT les liens de parrainage /join/ABC123
-      var match = path.match(/^\/join\/([^\/]+)\/?$/i);
-
-      if (match && match[1]) {
-        var code = match[1];
+      // ✅ 3. Gérer les liens de parrainage /join/ABC123
+      var joinMatch = path.match(/^\/join\/([^\/]+)\/?$/i);
+      if (joinMatch && joinMatch[1]) {
+        var code = joinMatch[1];
         window.location.replace(
           "/join/?ref=" + encodeURIComponent(code)
         );
         return;
       }
 
-      // 🔁 4. Tout le reste → accueil
+      // ✅ 4. Gérer les liens de groupe /group/xyz
+      var groupMatch = path.match(/^\/group\/([^\/]+)\/?$/i);
+      if (groupMatch && groupMatch[1]) {
+        var groupId = groupMatch[1];
+        window.location.replace(
+          "/group/?id=" + encodeURIComponent(groupId)
+        );
+        return;
+      }
+
+      // 🔁 5. Tout le reste → accueil
       window.location.replace("/");
     })();
   </script>
